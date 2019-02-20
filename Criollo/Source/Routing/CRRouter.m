@@ -123,6 +123,11 @@ NS_ASSUME_NONNULL_END
     [self add:path block:block recursive:NO method:CRHTTPMethodPut];
 }
 
+- (void)patch:(NSString *)path block:(CRRouteBlock)block {
+    [self add:path block:block recursive:NO method:CRHTTPMethodPatch];
+}
+
+
 - (void)delete:(NSString *)path block:(CRRouteBlock)block {
     [self add:path block:block recursive:NO method:CRHTTPMethodDelete];
 }
