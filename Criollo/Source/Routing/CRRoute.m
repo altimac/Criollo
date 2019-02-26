@@ -102,6 +102,15 @@
     return [self initWithBlock:block method:method path:path recursive:recursive];
 }
 
+- (instancetype)initWithController:(__kindof CRViewController*)controller method:(CRHTTPMethod)method path:(NSString * _Nullable)path recursive:(BOOL)recursive {
+    CRRouteBlock block = ^(CRRequest * _Nonnull request, CRResponse * _Nonnull response, CRRouteCompletionBlock  _Nonnull completionHandler) {
+        @autoreleasepool {
+            controller.routeBlock(request, response, completionHandler);
+        }
+    };
+    return [self initWithBlock:block method:method path:path recursive:recursive];
+}
+
 - (instancetype)initWithViewControllerClass:(Class)viewControllerClass nibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil method:(CRHTTPMethod)method path:(NSString * _Nullable)path recursive:(BOOL)recursive {
     CRRouteBlock block = ^(CRRequest * _Nonnull request, CRResponse * _Nonnull response, CRRouteCompletionBlock  _Nonnull completionHandler) {
         @autoreleasepool {

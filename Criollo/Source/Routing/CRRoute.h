@@ -9,6 +9,7 @@
 #import "CRTypes.h"
 
 @class CRRequest, CRResponse;
+@class CRViewController;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -20,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) CRRouteBlock block;
 
 - (instancetype)initWithBlock:(CRRouteBlock)block method:(CRHTTPMethod)method path:(NSString * _Nullable)path recursive:(BOOL)recursive NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithController:(__kindof CRViewController*)controller method:(CRHTTPMethod)method path:(NSString * _Nullable)path recursive:(BOOL)recursive;
 - (instancetype)initWithControllerClass:(__unsafe_unretained Class )controllerClass method:(CRHTTPMethod)method path:(NSString * _Nullable)path recursive:(BOOL)recursive;
 - (instancetype)initWithViewControllerClass:(__unsafe_unretained Class )viewControllerClass nibName:(NSString * _Nullable)nibNameOrNil bundle:(NSBundle * _Nullable)nibBundleOrNil method:(CRHTTPMethod)method path:(NSString * _Nullable)path recursive:(BOOL)recursive;
 
