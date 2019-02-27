@@ -102,7 +102,7 @@
     return [self initWithBlock:block method:method path:path recursive:recursive];
 }
 
-- (instancetype)initWithController:(__kindof CRViewController*)controller method:(CRHTTPMethod)method path:(NSString * _Nullable)path recursive:(BOOL)recursive {
+- (instancetype)initWithController:(__kindof CRRouteController*)controller method:(CRHTTPMethod)method path:(NSString * _Nullable)path recursive:(BOOL)recursive {
     CRRouteBlock block = ^(CRRequest * _Nonnull request, CRResponse * _Nonnull response, CRRouteCompletionBlock  _Nonnull completionHandler) {
         @autoreleasepool {
             controller.routeBlock(request, response, completionHandler);
