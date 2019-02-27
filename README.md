@@ -132,7 +132,7 @@ class APIController : CRRouteController {
 }
 
 // Add the controller to the server
-server.add("/api", controller:APIController.self)
+server.add("/api", controllerClass:APIController.self)
 ```
 
 ... and in Objective-C:
@@ -158,7 +158,7 @@ server.add("/api", controller:APIController.self)
 @end
 
 // Add the controller to the server
-[server add:@"/api" controller:APIController.class];
+[server add:@"/api" controllerClass:APIController.class];
 ```
 
 ### Views and View Controllers

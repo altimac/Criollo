@@ -11,6 +11,7 @@
 #define CRPathVarsKey       @"vars"
 
 @class CRRoute, CRRouteMatchingResult;
+@class CRRouteController;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -174,51 +175,69 @@ NS_ASSUME_NONNULL_BEGIN
  */
 
 /**
- Adds a controller to a pathspec, for all HTTP methods, recursively.
+ Adds a controller class (instantiated on the fly) to a pathspec, for all HTTP methods, recursively.
 
  @param path            The path specification.
- @param controllerClass The class name of the controller to be used.
+ @param controllerClass The class name of the controller to be instantiated on the fly.
  */
-- (void)add:(NSString *)path controller:(__unsafe_unretained Class)controllerClass;
+- (void)add:(NSString *)path controllerClass:(__unsafe_unretained Class)controllerClass;
 
 /**
- Adds a controller to a pathspec and HTTP method.
+ Adds a controller class (instantiated on the fly) to a pathspec and HTTP method.
 
  @param path            The path specification.
- @param controllerClass The class name of the controller to be used.
+ @param controllerClass The class name of the controller to be instantiated on the fly.
  @param recursive       Specifies wether the path spec should be matched exactly or if
  it should be treated aa a prefix.
  @param method          The HTTP request method
  */
-- (void)add:(NSString *)path controller:(__unsafe_unretained Class)controllerClass recursive:(BOOL)recursive method:(CRHTTPMethod)method;
+- (void)add:(NSString *)path controllerClass:(__unsafe_unretained Class)controllerClass recursive:(BOOL)recursive method:(CRHTTPMethod)method;
+
+/**
+ Adds a controller instance to handle a pathspec, for all HTTP methods, recursively.
+ 
+ @param controller      The controller instance to be used. It should have been inited with the pathspec
+ */
+- (void)addController:(__kindof CRRouteController*)controller;
+
+/**
+ Adds a controller instance to handle a pathspec and HTTP method.
+ 
+ @param controller      The controller instance to be used. It should have been inited with the pathspec
+ @param recursive       Specifies wether the path spec should be matched exactly or if
+ it should be treated aa a prefix.
+ @param method          The HTTP request method
+ */
+- (void)addController:(__kindof CRRouteController*)controller recursive:(BOOL)recursive method:(CRHTTPMethod)method;
+
 
 /**
  @name Adding a View Controller
  */
 
 /**
- Adds a view controller to a pathspec, for all HTTP methods, recursively.
+ Adds a view controller class (instantiated on the fly) to a pathspec, for all HTTP methods, recursively.
 
  @param path                The path specification.
- @param viewControllerClass The class name of the controller to be used.
+ @param viewControllerClass The class name of the controller to be instantiated on the fly.
  @param nibNameOrNil        The name of the `nib` file to associate with the view controller.
  @param nibBundleOrNil      he bundle in which to search for the `nib` file.
  */
-- (void)add:(NSString *)path viewController:(__unsafe_unretained Class)viewControllerClass withNibName:(NSString * _Nullable)nibNameOrNil bundle:(NSBundle * _Nullable)nibBundleOrNil;
+- (void)add:(NSString *)path viewControllerClass:(__unsafe_unretained Class)viewControllerClass withNibName:(NSString * _Nullable)nibNameOrNil bundle:(NSBundle * _Nullable)nibBundleOrNil;
 
 /**
 
- Adds a view controller to a pathspec and HTTP method.
+ Adds a view controller class (instantiated on the fly) to a pathspec and HTTP method.
 
  @param path                The path specification.
- @param viewControllerClass The class name of the controller to be used.
+ @param viewControllerClass The class name of the controller to be instantiated on the fly.
  @param nibNameOrNil        The name of the `nib` file to associate with the view controller.
  @param nibBundleOrNil      he bundle in which to search for the `nib` file.
  @param recursive       Specifies wether the path spec should be matched exactly or if
  it should be treated aa a prefix.
  @param method          The HTTP request method
  */
-- (void)add:(NSString *)path viewController:(__unsafe_unretained Class)viewControllerClass withNibName:(NSString * _Nullable)nibNameOrNil bundle:(NSBundle * _Nullable)nibBundleOrNil recursive:(BOOL)recursive method:(CRHTTPMethod)method;
+- (void)add:(NSString *)path viewControllerClass:(__unsafe_unretained Class)viewControllerClass withNibName:(NSString * _Nullable)nibNameOrNil bundle:(NSBundle * _Nullable)nibBundleOrNil recursive:(BOOL)recursive method:(CRHTTPMethod)method;
 
 /**
  @name Serving Directories
