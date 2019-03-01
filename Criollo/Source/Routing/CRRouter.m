@@ -218,10 +218,23 @@ NS_ASSUME_NONNULL_END
                 return;
             }
 
-            // If route is recursive just check that the path start with the route path
-            if ( route.recursive && [path hasPrefix:route.path] ) {
-                [routes addObject:[CRRouteMatchingResult routeMatchingResultWithRoute:route matches:nil]];
-                return;
+            // AH: That's wrong code! prefix matching is not good enough. It has to be done *by path component* and all route path components must match
+//            // If route is recursive just check that the path start with the route path
+//            if ( route.recursive && [path hasPrefix:route.path] ) {
+//                [routes addObject:[CRRouteMatchingResult routeMatchingResultWithRoute:route matches:nil]];
+//                return;
+//            }
+            // AH: This code avoid major bug such as  /api/LicenseSeasonPart/<identifier> path to be handled by "/api/LicenseSeason" prefix controller!
+            if( route.recursive && route.pathRegex == nil ) {
+                NSArray *routeComponents = [route.path pathComponents];
+                NSArray *pathComponents = [path pathComponents];
+                if(pathComponents.count >= routeComponents.count) {
+                    NSArray *truncatedPathComponents = [pathComponents subarrayWithRange:NSMakeRange(0, routeComponents.count)];
+                    if([truncatedPathComponents isEqualToArray:routeComponents]) {
+                        [routes addObject:[CRRouteMatchingResult routeMatchingResultWithRoute:route matches:nil]];
+                        return;
+                    }
+                }
             }
 
             // If the route regex matches
