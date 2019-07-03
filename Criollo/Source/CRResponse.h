@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) NSUInteger statusCode;
 @property (nonatomic, strong, readonly, nullable) NSString* statusDescription;
+@property (nonatomic, readonly) BOOL finished; // AH: made that public because it helps...
 
 - (void)setStatusCode:(NSUInteger)statusCode description:(NSString * _Nullable)description;
 
