@@ -67,23 +67,51 @@
 
     NSMutableData* dataToSend = [self initialResponseData];
 
-    if ( self.isChunked ) {
-        // Chunk size + CRLF
-        [dataToSend appendData: [[NSString stringWithFormat:@"%lx", (unsigned long)data.length] dataUsingEncoding:NSUTF8StringEncoding]];
-        [dataToSend appendData: [CRConnection CRLFData]];
+#define MAX_CHUNK_SIZE 1024*1024
+    NSData *remainingData = data;
+    
+    while (remainingData.length > 0) {
+        if(remainingData.length <= MAX_CHUNK_SIZE) {
+            if ( self.isChunked ) {
+                // Chunk size + CRLF
+                [dataToSend appendData: [[NSString stringWithFormat:@"%lx", (unsigned long)remainingData.length] dataUsingEncoding:NSUTF8StringEncoding]];
+                [dataToSend appendData: [CRConnection CRLFData]];
+            }
+
+            // The actual data
+            [dataToSend appendData:remainingData];
+            
+            if ( self.isChunked ) {
+                // Chunk termination
+                [dataToSend appendData: [CRConnection CRLFData]];
+            }
+            
+            remainingData = nil;
+        }
+        else {
+            NSData *chunkData = [remainingData subdataWithRange:NSMakeRange(0, MAX_CHUNK_SIZE)];
+            remainingData = [remainingData subdataWithRange:NSMakeRange(MAX_CHUNK_SIZE, remainingData.length-MAX_CHUNK_SIZE)];
+            if ( self.isChunked ) {
+                // Chunk size + CRLF
+                [dataToSend appendData: [[NSString stringWithFormat:@"%lx", (unsigned long)chunkData.length] dataUsingEncoding:NSUTF8StringEncoding]];
+                [dataToSend appendData: [CRConnection CRLFData]];
+            }
+
+            // The actual data
+            [dataToSend appendData:chunkData];
+            
+            if ( self.isChunked ) {
+                // Chunk termination
+                [dataToSend appendData: [CRConnection CRLFData]];
+            }
+        }
     }
 
-    // The actual data
-    [dataToSend appendData:data];
-	
-    if ( self.isChunked ) {
-        // Chunk termination
-        [dataToSend appendData: [CRConnection CRLFData]];
-    }
 
     if ( flag && self.isChunked ) {
         [dataToSend appendData: [@"0" dataUsingEncoding:NSUTF8StringEncoding]];
         [dataToSend appendData:[CRConnection CRLFCRLFData]];
+        [dataToSend appendData:[CRConnection CRLFCRLFData]]; // AH in the documentation there should be one more \r\n!!! see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Transfer-Encoding or Wikipedia (https://fr.wikipedia.org/wiki/Chunked_transfer_encoding)
     }
 
     [super writeData:dataToSend finish:flag];
