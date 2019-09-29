@@ -135,11 +135,11 @@
                     NSString* pathSpec = [[NSString alloc] initWithBytesNoCopy:(void *)data.bytes + pathRange.location length:pathRange.length encoding:NSUTF8StringEncoding freeWhenDone:NO];
 
                     NSString* versionSpec = [[NSString alloc] initWithBytesNoCopy:(void *)data.bytes + versionRange.location length:versionRange.length encoding:NSUTF8StringEncoding freeWhenDone:NO];
-                    CRHTTPVersion version = CRHTTPVersionMake(versionSpec);
+                    //CRHTTPVersion version = CRHTTPVersionMake(versionSpec); // AH: commented because it's now unused. See below
 
                     NSRange rangeOfHostHeader = [data rangeOfData:[@"Host: " dataUsingEncoding:NSUTF8StringEncoding] options:0 range:NSMakeRange(0, data.length)];
 
-                    if ( rangeOfHostHeader.location != NSNotFound || version == CRHTTPVersion1_0 ) {
+                    if ( rangeOfHostHeader.location != NSNotFound /*|| version == CRHTTPVersion1_0*/ ) { // AH: the next line will crash if rangeOfHostHeader.location == NSNotFound (and version is CRHTTPVersion1_0). Because i'm not familiar enough with Criollo's code, I'm simply refusing HTTP 1.0 support...
                         NSRange rangeOfNewLineAfterHost = [data rangeOfData:[CRConnection CRLFData] options:0 range:NSMakeRange(rangeOfHostHeader.location + rangeOfHostHeader.length, data.length - rangeOfHostHeader.location - rangeOfHostHeader.length)];
 
                         if ( rangeOfNewLineAfterHost.location == NSNotFound ) {
