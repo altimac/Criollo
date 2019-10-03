@@ -122,7 +122,6 @@
     if ( flag && self.isChunked ) {
         [dataToSend appendData: [@"0" dataUsingEncoding:NSUTF8StringEncoding]];
         [dataToSend appendData:[CRConnection CRLFCRLFData]];
-        [dataToSend appendData:[CRConnection CRLFCRLFData]]; // AH in the documentation there should be one more \r\n!!! see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Transfer-Encoding or Wikipedia (https://fr.wikipedia.org/wiki/Chunked_transfer_encoding)
     }
 
     [super writeData:dataToSend finish:flag];
