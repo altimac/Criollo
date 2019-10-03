@@ -136,6 +136,18 @@
     return shouldClose;
 }
 
+-(BOOL)acceptsGzipContentEncoding
+{
+    BOOL acceptsGzipContentEncoding = NO;
+    
+    //AH: why does shouldCloseConnection uses valueForHTTPHeaderField while other parts uses self.env dictionary??
+    if([self.env[@"HTTP_ACCEPT_ENCODING"] rangeOfString:@"gzip" options:NSCaseInsensitiveSearch].location != NSNotFound) {
+        acceptsGzipContentEncoding = YES;
+    }
+    
+    return acceptsGzipContentEncoding;
+}
+
 #pragma mark - Body parsing
 
 - (void)clearBodyParsingTargets {

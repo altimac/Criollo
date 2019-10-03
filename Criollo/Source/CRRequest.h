@@ -40,6 +40,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly, nullable) CRRequestRange * range;
 
+/**
+ *  Returns YES if the client supports gzip content encoding according to the
+ *  "Accept-Encoding" header.
+ */
+@property(nonatomic, readonly) BOOL acceptsGzipContentEncoding;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

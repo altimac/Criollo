@@ -9,12 +9,14 @@
 #import "CRMessage_Internal.h"
 #import "CRResponse_Internal.h"
 #import "CRHTTPResponse.h"
+#import "CRRequest.h"
 #import "CRHTTPConnection.h"
 #import "CRConnection_Internal.h"
 #import "CRHTTPServer.h"
 #import "CRHTTPServerConfiguration.h"
 #import "GCDAsyncSocket.h"
 #import "NSDate+RFC1123.h"
+#import "NSData+Gzip.h"
 
 @interface CRHTTPResponse ()
 
@@ -54,6 +56,10 @@
     if ( [self valueForHTTPHeaderField:@"Content-length"] == nil ) {
         [self setValue:@"chunked" forHTTPHeaderField:@"Transfer-encoding"];
     }
+    
+    if ( self.request.acceptsGzipContentEncoding == YES) {
+        [self setValue:@"gzip" forHTTPHeaderField:@"Content-encoding"];
+    }
 
     [super buildHeaders];
 
@@ -67,9 +73,14 @@
 
     NSMutableData* dataToSend = [self initialResponseData];
 
-#define MAX_CHUNK_SIZE 1024*1024
     NSData *remainingData = data;
     
+    if([[self valueForHTTPHeaderField:@"Content-encoding"] isEqual:@"gzip"]) { // do not compress headers
+        remainingData = [remainingData gzippedData];
+    }
+
+    // split data in chunks if necessary
+    #define MAX_CHUNK_SIZE 1024*1024
     while (remainingData.length > 0) {
         if(remainingData.length <= MAX_CHUNK_SIZE) {
             if ( self.isChunked ) {
