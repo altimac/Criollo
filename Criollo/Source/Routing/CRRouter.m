@@ -77,7 +77,7 @@ NS_ASSUME_NONNULL_END
                 [responseString appendFormat:@"%@\n", obj];
             }];
 #else
-            [responseString appendFormat:@"Cannot %@ %@", NSStringFromCRHTTPMethod(request.method), request.URL.path];
+            [responseString appendFormat:@"No routes defined for %@ %@", NSStringFromCRHTTPMethod(request.method), request.URL.path];
 #endif
             
             [response setValue:@(responseString.length).stringValue forHTTPHeaderField:@"Content-Length"];
