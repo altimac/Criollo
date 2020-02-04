@@ -63,6 +63,9 @@ int CRApplicationMain(int argc, const char * argv[], id<CRApplicationDelegate> d
     @autoreleasepool {
         CRApplication* app = [[CRApplication alloc] initWithDelegate:delegate];
 
+        // Notes to AH: those signals are pretty common signals to stop a process/daemon from outside of the process.
+        // Those signals are not the signals sent by Cocoa machinery for exceptions or whatever other reason.
+        // typically SIGABRT is for uncaught NSException.
         [app.dispatchSources addObject:CRApplicationInstallSignalHandler(SIGTERM)];
         [app.dispatchSources addObject:CRApplicationInstallSignalHandler(SIGINT)];
         [app.dispatchSources addObject:CRApplicationInstallSignalHandler(SIGQUIT)];
