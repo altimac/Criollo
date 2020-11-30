@@ -119,6 +119,10 @@ NS_ASSUME_NONNULL_END
 - (void)post:(NSString *)path block:(CRRouteBlock)block {
     [self add:path block:block recursive:NO method:CRHTTPMethodPost];
 }
+  
+- (void)patch:(NSString *)path block:(CRRouteBlock)block {
+    [self add:path block:block recursive:NO method:CRHTTPMethodPatch];
+}
 
 - (void)put:(NSString *)path block:(CRRouteBlock)block {
     [self add:path block:block recursive:NO method:CRHTTPMethodPut];
@@ -203,7 +207,6 @@ NS_ASSUME_NONNULL_END
 }
 
 - (NSArray<CRRouteMatchingResult *> *)routesForPath:(NSString*)path method:(CRHTTPMethod)method {
-//    NSLog(@"%s %@ %@", __PRETTY_FUNCTION__, path, NSStringFromCRHTTPMethod(method));
     NSMutableArray<CRRouteMatchingResult *> * routes = [NSMutableArray array];
     [self.routes enumerateObjectsUsingBlock:^(CRRoute * _Nonnull route, NSUInteger idx, BOOL * _Nonnull stop) {
         @autoreleasepool {
